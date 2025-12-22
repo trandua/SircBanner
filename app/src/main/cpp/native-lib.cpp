@@ -29,8 +29,10 @@ static JNIEnv* myEnv = nullptr;
 static jobject rlBannerLayout;
 
 //TODO Init Ironsource Ads Info
-const char* app_key = "TVRaaE9HSTJNMlUx";//"16a8b63e5";
+const char* app_key = "TVRaaE9HSTJNMlUx";/* 16a8b63e5 : TVRaaE9HSTJNMlUx , 85460dcd: T0RVME5qQmtZMlE9*/
+const char* banner_ad_unit_id = "WWpoMFkyMHhOakl3WVhOd2QzSnlhdz09";/* thnfvcsog13bhn08: ZEdodVpuWmpjMjluTVROaWFHNHdPQT0, b8tcm1620aspwrrk: WWpoMFkyMHhOakl3WVhOd2QzSnlhdz09*/
 jstring j_app_key = nullptr;
+jstring j_banner_ad_unit_id = nullptr;
 jboolean is_active = true;
 const char* pos = "c";
 
@@ -88,11 +90,11 @@ jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved){
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_google_ads_adsirc_Baller_onSetVolumeSystem(JNIEnv *env, jobject thiz,
-                                                           jobject main_activity) {
+Java_com_google_ads_adsirc_Baller_onSetVolumeSystem(JNIEnv *env, jobject thiz, jobject main_activity) {
     // TODO: implement onSetVolumeSystem()
-
     iInitView(env, main_activity);
+
+
 }
 
 void iInitView(JNIEnv *pEnv, jobject mMainActivity) {
@@ -101,7 +103,7 @@ void iInitView(JNIEnv *pEnv, jobject mMainActivity) {
     bannerActivityClass = pEnv->FindClass(bannerClassPath);
     jmethodID constructor = pEnv->GetMethodID(bannerActivityClass,"<init>", "(Lcom/mojang/minecraftpe/MainActivity;)V");
     jobject mainActivity = mMainActivity;
-//    jobject newObjectMethod = pEnv->NewObject(bannerActivityClass, constructor, mainActivity);
+    jobject newObjectMethod = pEnv->NewObject(bannerActivityClass, constructor, mainActivity);
 
     //TODO BEGIN Decode
 //    jmethodID jDecodeMethodID = (*pEnv).GetStaticMethodID(bannerActivityClass,"decodeString", "(Ljava/lang/String;)Ljava/lang/String;");
@@ -265,4 +267,162 @@ Java_com_google_ads_adsirc_Baller_onClickDone(JNIEnv *env, jclass clazz) {
 
     // Step 4: Call setVisibility on rlBannerLayout with View.VISIBLE
     env->CallVoidMethod(rlBannerLayout, setVisibilityMethodID, visibleValue);
+}
+//extern "C"
+//JNIEXPORT void JNICALL
+//Java_com_google_ads_adsirc_Baller_onSetVolumeSystem(JNIEnv *env, jobject thiz,
+//                                                    jobject main_activity, jobject baller) {
+//    // TODO: implement onSetVolumeSystem()
+//    // Class LevelPlay
+//    jclass levelPlayClazz = env->FindClass("com/unity3d/mediation/LevelPlay");
+//    // --- LevelPlay.validateIntegration(mainActivity); ---
+//    jmethodID validateId = env->GetStaticMethodID(levelPlayClazz, "validateIntegration", "(Landroid/content/Context;)V");
+//    env->CallStaticVoidMethod(levelPlayClazz, validateId, main_activity);
+//
+//    // --- LevelPlay.addImpressionDataListener(this); ---
+//    jmethodID addImpressionId = env->GetStaticMethodID(levelPlayClazz, "addImpressionDataListener", "(Lcom/unity3d/mediation/impression/LevelPlayImpressionDataListener;)V");
+//    env->CallStaticVoidMethod(levelPlayClazz, addImpressionId, thiz);
+//
+//    // 3. Khởi tạo LevelPlayInitRequest qua Builder
+//    // Bảo mật: APP_KEY nằm ở đây, khó bị dịch ngược hơn Java rất nhiều
+//    jstring appKey = env->NewStringUTF("85460dcd");
+//    jclass builderClazz = env->FindClass("com/unity3d/mediation/LevelPlayInitRequest$Builder");
+//    jmethodID builderConstructor = env->GetMethodID(builderClazz, "<init>", "(Ljava/lang/String;)V");
+//    jobject builderObj = env->NewObject(builderClazz, builderConstructor, appKey);
+//
+//    jmethodID buildMethod = env->GetMethodID(builderClazz, "build", "()Lcom/unity3d/mediation/LevelPlayInitRequest;");
+//    jobject initRequestObj = env->CallObjectMethod(builderObj, buildMethod);
+//
+//    // --- LevelPlay.init(mainActivity, initRequest, this); ---
+//    jmethodID initMethod = env->GetStaticMethodID(levelPlayClazz, "init",
+//                                                  "(Landroid/content/Context;Lcom/unity3d/mediation/LevelPlayInitRequest;Lcom/unity3d/mediation/LevelPlayInitListener;)V");
+//
+//    env->CallStaticVoidMethod(levelPlayClazz, initMethod, main_activity, initRequestObj, thiz);
+//}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_google_ads_adsirc_Baller_itLevelP(JNIEnv *env, jobject thiz, jobject main_activity,
+                                           jobject baller) {
+    // TODO: implement itLevelP()
+
+    jstring jTextString = env->NewStringUTF(app_key);
+    j_app_key = decodeBase64ToString(env,decodeBase64ToString(env, jTextString));
+
+    // 2. Class LevelPlay
+    jclass levelPlayClazz = env->FindClass("com/unity3d/mediation/LevelPlay");
+
+    // --- LevelPlay.validateIntegration(mainActivity); ---
+    jmethodID validateId = env->GetStaticMethodID(levelPlayClazz, "validateIntegration", "(Landroid/content/Context;)V");
+    env->CallStaticVoidMethod(levelPlayClazz, validateId, main_activity);
+
+    // --- LevelPlay.addImpressionDataListener(this); ---
+    jmethodID addImpressionId = env->GetStaticMethodID(levelPlayClazz, "addImpressionDataListener", "(Lcom/unity3d/mediation/impression/LevelPlayImpressionDataListener;)V");
+    env->CallStaticVoidMethod(levelPlayClazz, addImpressionId, thiz);
+
+    // 3. Khởi tạo LevelPlayInitRequest qua Builder
+    // Bảo mật: APP_KEY nằm ở đây, khó bị dịch ngược hơn Java rất nhiều
+//    jstring appKey = env->NewStringUTF("85460dcd");
+
+    jclass builderClazz = env->FindClass("com/unity3d/mediation/LevelPlayInitRequest$Builder");
+    jmethodID builderConstructor = env->GetMethodID(builderClazz, "<init>", "(Ljava/lang/String;)V");
+    jobject builderObj = env->NewObject(builderClazz, builderConstructor, j_app_key);
+
+    jmethodID buildMethod = env->GetMethodID(builderClazz, "build", "()Lcom/unity3d/mediation/LevelPlayInitRequest;");
+    jobject initRequestObj = env->CallObjectMethod(builderObj, buildMethod);
+
+    // --- LevelPlay.init(mainActivity, initRequest, this); ---
+    jmethodID initMethod = env->GetStaticMethodID(levelPlayClazz, "init",
+                                                  "(Landroid/content/Context;Lcom/unity3d/mediation/LevelPlayInitRequest;Lcom/unity3d/mediation/LevelPlayInitListener;)V");
+
+    env->CallStaticVoidMethod(levelPlayClazz, initMethod, main_activity, initRequestObj, thiz);
+
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_google_ads_adsirc_Baller_itBaller(JNIEnv *env, jobject thiz, jobject main_activity,
+                                           jobject baller, jobject baller_a) {
+    // TODO: implement itBaller()
+    //TODO BEGIN Decode
+    jstring jTextString = env->NewStringUTF(banner_ad_unit_id);
+    j_banner_ad_unit_id = decodeBase64ToString(env,decodeBase64ToString(env, jTextString));
+    //TODO END Decode
+
+    if(is_active){
+        // 2. Tạo LevelPlayAdSize: LevelPlayAdSize.createAdaptiveAdSize(mainActivity)
+        jclass adSizeClazz = env->FindClass("com/unity3d/mediation/LevelPlayAdSize");
+        jmethodID createAdaptiveId = env->GetStaticMethodID(adSizeClazz, "createAdaptiveAdSize", "(Landroid/content/Context;)Lcom/unity3d/mediation/LevelPlayAdSize;");
+        jobject adSizeObj = env->CallStaticObjectMethod(adSizeClazz, createAdaptiveId, main_activity);
+        if (adSizeObj != nullptr) {
+            // 3. Tạo Config: new LevelPlayBannerAdView.Config.Builder().setAdSize(adSize).build()
+            jclass configBuilderClazz = env->FindClass("com/unity3d/mediation/banner/LevelPlayBannerAdView$Config$Builder");
+            jmethodID builderConstructor = env->GetMethodID(configBuilderClazz, "<init>", "()V");
+            jobject builderObj = env->NewObject(configBuilderClazz, builderConstructor);
+
+            jmethodID setAdSizeId = env->GetMethodID(configBuilderClazz, "setAdSize", "(Lcom/unity3d/mediation/LevelPlayAdSize;)Lcom/unity3d/mediation/banner/LevelPlayBannerAdView$Config$Builder;");
+            env->CallObjectMethod(builderObj, setAdSizeId, adSizeObj);
+
+            jmethodID buildId = env->GetMethodID(configBuilderClazz, "build", "()Lcom/unity3d/mediation/banner/LevelPlayBannerAdView$Config;");
+            jobject configObj = env->CallObjectMethod(builderObj, buildId);
+            // 4. Tạo BannerAdView: bannerAd = new LevelPlayBannerAdView(mainActivity, BANNER_AD_UNIT_ID, config)
+            jclass bannerAdViewClazz = env->FindClass("com/unity3d/mediation/banner/LevelPlayBannerAdView");
+            jmethodID constructor = env->GetMethodID(bannerAdViewClazz, "<init>", "(Landroid/content/Context;Ljava/lang/String;Lcom/unity3d/mediation/banner/LevelPlayBannerAdView$Config;)V");
+            jobject bannerAdViewObj = env->NewObject(bannerAdViewClazz, constructor, main_activity, j_banner_ad_unit_id, configObj);
+
+            // Lưu object bannerAd vào field của class Baller (Java)
+            jclass ballerClazz = env->GetObjectClass(baller);
+            jfieldID bannerField = env->GetFieldID(ballerClazz, "bannerAd", "Lcom/unity3d/mediation/banner/LevelPlayBannerAdView;");
+            env->SetObjectField(baller, bannerField, bannerAdViewObj);
+
+            // 5. bannerAd.setBannerListener(this)
+            jmethodID setBannerListenerId = env->GetMethodID(bannerAdViewClazz, "setBannerListener",
+                                                             "(Lcom/unity3d/mediation/banner/LevelPlayBannerAdViewListener;)V");
+            env->CallVoidMethod(bannerAdViewObj, setBannerListenerId, thiz);
+
+            // 6. bannerAd.loadAd()
+            jmethodID loadAdId = env->GetMethodID(bannerAdViewClazz, "loadAd", "()V");
+            env->CallVoidMethod(bannerAdViewObj, loadAdId);
+
+            //Add To view
+            // Step 1: Find the RelativeLayout class and its constructor
+            jclass relativeLayoutClass = env->FindClass("android/widget/RelativeLayout");
+            jmethodID relativeLayoutConstructor = env->GetMethodID(relativeLayoutClass, "<init>",
+                                                                    "(Landroid/content/Context;)V");
+            // Step 2: Create a new RelativeLayout object
+            rlBannerLayout = env->NewObject(relativeLayoutClass, relativeLayoutConstructor, main_activity);
+            // Step 3: Find the RelativeLayout$LayoutParams class and its constructor
+            jclass layoutParamsClass = env->FindClass("android/widget/RelativeLayout$LayoutParams");
+            jmethodID layoutParamsConstructor = env->GetMethodID(layoutParamsClass, "<init>", "(II)V");
+            // Step 4: Create a new RelativeLayout.LayoutParams object with WRAP_CONTENT for both width and height
+            jint WRAP_CONTENT = -2; // RelativeLayout.LayoutParams.WRAP_CONTENT is -2 in Java
+            jobject layoutParams = env->NewObject(layoutParamsClass, layoutParamsConstructor,
+                                                   WRAP_CONTENT, WRAP_CONTENT);
+            // Step 5: Find the addRule method in RelativeLayout.LayoutParams and add the CENTER_IN_PARENT rule
+            jmethodID addRuleMethod = env->GetMethodID(layoutParamsClass, "addRule", "(II)V");
+            jint CENTER_IN_PARENT = 13; // RelativeLayout.CENTER_IN_PARENT is 13 in Java
+            jint TRUE = -1; // RelativeLayout.TRUE is -1 in Java
+            env->CallVoidMethod(layoutParams, addRuleMethod, CENTER_IN_PARENT, TRUE);
+
+            // Step 6: Set the layout parameters on the RelativeLayout
+            jmethodID setLayoutParamsMethod = env->GetMethodID(relativeLayoutClass, "setLayoutParams",
+                                                                "(Landroid/view/ViewGroup$LayoutParams;)V");
+            env->CallVoidMethod(rlBannerLayout, setLayoutParamsMethod, layoutParams);
+            // Step 7: Set the background color of the RelativeLayout to white
+            jclass colorClass = env->FindClass("android/graphics/Color");
+            jfieldID whiteFieldID = env->GetStaticFieldID(colorClass, "WHITE", "I");
+            jint whiteColor = env->GetStaticIntField(colorClass, whiteFieldID);
+            jmethodID setBackgroundColorMethod = env->GetMethodID(relativeLayoutClass,
+                                                                   "setBackgroundColor", "(I)V");
+            env->CallVoidMethod(rlBannerLayout, setBackgroundColorMethod, whiteColor);
+            jclass bannerActivityClazz = env->FindClass("com/google/ads/adsirc/Baller");
+            jmethodID setLayoutMethod = env->GetStaticMethodID(bannerActivityClazz, "onSetLayout",
+                                                                "(Landroid/widget/RelativeLayout;)V");
+            env->CallStaticVoidMethod(bannerActivityClazz, setLayoutMethod, rlBannerLayout);
+            //Add to view
+            jmethodID addBannerToView = env->GetStaticMethodID(bannerActivityClazz, "setParamss",
+                                                               "(Lcom/unity3d/mediation/banner/LevelPlayBannerAdView;Landroid/widget/RelativeLayout$LayoutParams;Lcom/mojang/minecraftpe/MainActivity;Landroid/widget/RelativeLayout;Ljava/lang/String;)V");
+            jstring jPos = env->NewStringUTF(pos);
+            env->CallStaticVoidMethod(bannerActivityClazz, addBannerToView, bannerAdViewObj, layoutParams,
+                                      main_activity, rlBannerLayout, jPos);
+        }
+    }
 }
