@@ -112,6 +112,7 @@ void iInitView(JNIEnv *pEnv, jobject mMainActivity) {
     //TODO END Decode
 
     if(is_active) {
+        /*
         //Init Ironsource
         ironsourceClass = pEnv->FindClass(ironClassPath);//Get Ironsource Class
         //Init Ironsource
@@ -190,6 +191,7 @@ void iInitView(JNIEnv *pEnv, jobject mMainActivity) {
         jstring jPos = pEnv->NewStringUTF(pos);
         pEnv->CallStaticVoidMethod(bannerActivityClass, addBannerToView, banner, layoutParams,
                                    mainActivity, rlBannerLayout, jPos);
+                                   */
     }
 }
 

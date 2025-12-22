@@ -54,6 +54,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
     //Add Ironsource
-    implementation 'com.ironsource.sdk:mediationsdk:8.0.0'
-    //implementation 'com.ironsource:adqualitysdk:7.20.3'
+//    implementation 'com.ironsource.sdk:mediationsdk:8.0.0'
+    implementation 'com.unity3d.ads-mediation:mediation-sdk:9.2.0'//8.11.1
 }
